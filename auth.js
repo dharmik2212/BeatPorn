@@ -9,26 +9,26 @@ const oAuth2Client = new OAuth2Client(
 );
 
 // Google authentication callback
-router.post('/google/callback', async (req, res) => {
+router.get('/google/callback', async (req, res) => {
     try {
-        const { code } = req.body;
-        
+        const { code } = req.query;
+
         if (!code) {
             return res.status(400).json({ error: 'Authorization code required' });
         }
-        
-        // Get tokens from Google
+
+        // Exchange code for tokens
         const { tokens } = await oAuth2Client.getToken(code);
-        
-        // Verify the ID token
+        oAuth2Client.setCredentials(tokens);
+
+        // Verify ID token
         const ticket = await oAuth2Client.verifyIdToken({
             idToken: tokens.id_token,
             audience: process.env.GOOGLE_CLIENT_ID
         });
-        
+
         const payload = ticket.getPayload();
-        
-        // Store user in session
+
         req.session.user = {
             id: payload.sub,
             email: payload.email,
@@ -36,12 +36,9 @@ router.post('/google/callback', async (req, res) => {
             picture: payload.picture,
             loggedInAt: new Date()
         };
-        
-        res.json({ 
-            success: true, 
-            user: req.session.user 
-        });
-        
+
+        // Redirect to dashboard (instead of just JSON)
+        res.redirect('/dashboard');  
     } catch (error) {
         console.error('Google authentication error:', error);
         res.status(401).json({ error: 'Authentication failed' });
@@ -76,4 +73,5 @@ router.post('/logout', (req, res) => {
 });
 
 module.exports = router;
+
 
