@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeatPorn - Overcome Porn Addiction</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon"><i class="fas fa-brain"></i></div>
+                    <div class="logo-text">BeatPorn</div>
+                </div>
+                <nav class="nav-links">
+                    <a href="#">Home</a>
+                    <a href="#">Program</a>
+                    <a href="#">Community</a>
+                    <a href="#">Resources</a>
+                    <a href="#">About</a>
+                </nav>
+                <div class="auth-buttons">
+                    <button class="btn btn-login" id="loginBtn">Login with Google</button>
+                    <button class="btn btn-signup" id="signupBtn">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Take Control of Your Mind</h1>
+            <p>Join our 90-Day Neural Rewiring Program to overcome porn addiction and reclaim your life</p>
+            <button class="btn btn-assessment" id="startAssessment">Start Assessment</button>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-user-check"></i></div>
+                    <h3>Personal Assessment</h3>
+                    <p>Complete a detailed assessment to understand your addiction patterns and create a personalized
+                        recovery plan.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-brain"></i></div>
+                    <h3>Neural Rewiring</h3>
+                    <p>Follow our science-backed 90-day program to rewire your brain and break free from addictive
+                        patterns.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>Progress Tracking</h3>
+                    <p>Monitor your recovery journey with detailed analytics and milestone tracking to stay motivated.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Program Section -->
+    <section class="program">
+        <div class="container">
+            <h2 class="section-title">90-Day Neural Rewiring Program</h2>
+            <div class="program-steps">
+                <div class="program-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Dopamine Detox</h3>
+                        <p>Reset your brain's reward system by abstaining from all artificial dopamine sources for 7
+                            days.</p>
+                    </div>
+                </div>
+                <div class="program-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Habit Stacking</h3>
+                        <p>Replace addictive behaviors with positive habits through our structured habit formation
+                            system.</p>
+                    </div>
+                </div>
+                <div class="program-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Trigger Awareness</h3>
+                        <p>Identify and manage your personal triggers with guided exercises and AI-powered insights.</p>
+                    </div>
+                </div>
+                <div class="program-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Mindful Living</h3>
+                        <p>Develop mindfulness practices to stay present and reduce compulsive behaviors.</p>
+                    </div>
+                </div>
+                <div class="program-step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h3>Relapse Prevention</h3>
+                        <p>Learn proven techniques to prevent relapse and maintain your recovery long-term.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Recovery Calendar Section -->
+        <div id="recoveryCalendar" style="display:none; margin-top: 60px;">
+            <h3 class="section-title">Your Recovery Calendar</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <!-- Dynamically filled by JavaScript -->
+                <div id="calendarGrid" style="display: grid; grid-template-columns: repeat(7, 40px); gap: 8px;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Support</a>
+                <a href="#">Research</a>
+                <a href="#">Contact</a>
+            </div>
+            <p class="copyright">© 2023 MindReset. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Assessment Modal -->
+    <div class="modal" id="assessmentModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeAssessment">&times;</span>
+            <h2 class="modal-title">Personal Assessment</h2>
+            <form id="assessmentForm">
+                <div class="form-group">
+                    <label for="age">What is your age?</label>
+                    <input type="number" class="form-control" id="age" min="13" max="100" required>
+                </div>
+                <div class="form-group">
+                    <label for="gender">What is your gender?</label>
+                    <select class="form-control" id="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                        <option value="prefer-not-to-say">Prefer not to say</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="startAge">At what age did you start watching porn?</label>
+                    <input type="number" class="form-control" id="startAge" min="0" max="100" required>
+                </div>
+                <div class="form-group">
+                    <label for="frequency">How often do you watch porn or masturbate?</label>
+                    <select class="form-control" id="frequency" required>
+                        <option value="">Select Frequency</option>
+                        <option value="multiple-daily">Multiple times daily</option>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Several times a week</option>
+                        <option value="weekly-once">Once a week</option>
+                        <option value="monthly">Several times a month</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-submit">Calculate My Progress</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard Section (Initially Hidden) -->
+    <section class="dashboard" id="dashboard">
+        <div class="container">
+            <div class="dashboard-header">
+                <h2 class="welcome-text">Welcome, <span id="userName">User</span>!</h2>
+                <p>Here's your personalized recovery dashboard</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="addictionScore">72%</div>
+                    <div class="stat-label">Addiction Score</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="daysClean">14</div>
+                    <div class="stat-label">Days Clean</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="brainRewire">35%</div>
+                    <div class="stat-label">Brain Rewire Progress</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="savedTime">42h</div>
+                    <div class="stat-label">Time Saved</div>
+                </div>
+            </div>
+
+            <h3 class="section-title">Your Recovery Progress</h3>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+
+            <h3 class="section-title">90-Day Neural Rewiring Program</h3>
+            <div class="program-grid">
+               <!-- Phase 1: Dopamine Detox -->
+<div class="program-card" onclick="location.href='challenges/dopamine-detox.html'" style="cursor: pointer;">
+  <h3 class="phase-title">1. Dopamine Detox</h3>
+  <p class="phase-description">Complete 7 days of dopamine fasting to reset your brain's reward system.</p>
+  <div class="challenge-status">
+    <strong>Status:</strong> <span class="status-text">Not Started</span>
+  </div>
+  <button class="btn-start">View Challenge</button>
+</div>
+
+<!-- Phase 2: Habit Stacking -->
+<div class="program-card" onclick="location.href='challenges/habit-stacking.html'" style="cursor: pointer;">
+  <h3 class="phase-title">2. Habit Stacking</h3>
+  <p class="phase-description">Build a morning routine by stacking positive habits on top of each other.</p>
+  <div class="challenge-status">
+    <strong>Status:</strong> <span class="status-text">Not Started</span>
+  </div>
+  <button class="btn-start">View Challenge</button>
+</div>
+
+<!-- Phase 3: Trigger Awareness -->
+<div class="program-card" onclick="location.href='challenges/trigger-awareness.html'" style="cursor: pointer;">
+  <h3 class="phase-title">3. Trigger Awareness</h3>
+  <p class="phase-description">Identify emotional and environmental triggers that lead to urges.</p>
+  <div class="challenge-status">
+    <strong>Status:</strong> <span class="status-text">Not Started</span>
+  </div>
+  <button class="btn-start">View Challenge</button>
+</div>
+
+<!-- Phase 4: Squad Building -->
+<div class="program-card" onclick="location.href='challenges/squad-building.html'" style="cursor: pointer;">
+  <h3 class="phase-title">4. Squad Building</h3>
+  <p class="phase-description">Connect with accountability partners or a support group for motivation.</p>
+  <div class="challenge-status">
+    <strong>Status:</strong> <span class="status-text">Not Started</span>
+  </div>
+  <button class="btn-start">View Challenge</button>
+</div>
+
+<!-- Phase 5: Mindful Living -->
+<div class="program-card" onclick="location.href='challenges/mindful-living.html'" style="cursor: pointer;">
+  <h3 class="phase-title">5. Mindful Living</h3>
+  <p class="phase-description">Practice meditation and mindfulness to regain control over urges.</p>
+  <div class="challenge-status">
+    <strong>Status:</strong> <span class="status-text">Not Started</span>
+  </div>
+  <button class="btn-start">View Challenge</button>
+</div>
+
+<!-- Phase 6: Relapse Prevention -->
+<div class="program-card" onclick="location.href='challenges/relapse-prevention.html'" style="cursor: pointer;">
+  <h3 class="phase-title">6. Relapse Prevention</h3>
+  <p class="phase-description">Learn how to bounce back from relapses and stay on track with your recovery.</p>
+  <div class="challenge-status">
+    <strong>Status:</strong> <span class="status-text">Not Started</span>
+  </div>
+  <button class="btn-start">View Challenge</button>
+</div>
+
+<!-- Phase 7: Low Up Phase -->
+<div class="program-card" onclick="location.href='challenges/low-up-phase.html'" style="cursor: pointer;">
+  <h3 class="phase-title">7. Low Up Phase</h3>
+  <p class="phase-description">Rebuild low-energy periods with goal setting, rest, and productive habits.</p>
+  <div class="challenge-status">
+    <strong>Status:</strong> <span class="status-text">Not Started</span>
+  </div>
+  <button class="btn-start">View Challenge</button>
+</div>
+
+<!-- Phase 8: Boss Mode -->
+<div class="program-card" onclick="location.href='challenges/boss-mode.html'" style="cursor: pointer;">
+  <h3 class="phase-title">8. Boss Mode</h3>
+  <p class="phase-description">Level up your mental and physical discipline with advanced practices.</p>
+  <div class="challenge-status">
+    <strong>Status:</strong> <span class="status-text">Not Started</span>
+  </div>
+  <button class="btn-start">View Challenge</button>
+</div>
+
+<!-- Phase 9: Final Boss -->
+<div class="program-card" onclick="location.href='challenges/final-boss.html'" style="cursor: pointer;">
+  <h3 class="phase-title">9. Final Boss</h3>
+  <p class="phase-description">Face your toughest inner battles and prove you're in full control.</p>
+  <div class="challenge-status">
+    <strong>Status:</strong> <span class="status-text">Not Started</span>
+  </div>
+  <button class="btn-start">View Challenge</button>
+</div>
+
+
+            </div>
+        </div>
+    </section>
+
+   <script src="script.js" defer></script>
+</body>
+
+</html>
