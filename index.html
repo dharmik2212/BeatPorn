@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BeatPorn - Overcome Porn Addiction</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600&display=swap"
-        rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
     <!-- Header -->
     <header>
@@ -29,8 +26,26 @@
                     <a href="#">About</a>
                 </nav>
                 <div class="auth-buttons">
-                    <button class="btn btn-login" id="loginBtn">Login with Google</button>
-                    <button class="btn btn-signup" id="signupBtn">Sign Up</button>
+                    <div id="g_id_onload"
+                         data-client_id="YOUR_GOOGLE_CLIENT_ID"
+                         data-context="signin"
+                         data-ux_mode="popup"
+                         data-login_uri="http://localhost:3000/auth/google/callback"
+                         data-auto_prompt="false">
+                    </div>
+                    <div class="g_id_signin"
+                         data-type="standard"
+                         data-shape="pill"
+                         data-theme="filled_blue"
+                         data-text="signin_with"
+                         data-size="medium"
+                         data-logo_alignment="left">
+                    </div>
+                    <button class="btn btn-logout" id="logoutBtn" style="display: none;">Logout</button>
+                    <div id="userProfile" style="display: none;">
+                        <img id="userAvatar" width="32" height="32" style="border-radius: 50%;">
+                        <span id="userNameNav"></span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -213,103 +228,109 @@
             </div>
 
             <h3 class="section-title">90-Day Neural Rewiring Program</h3>
-            <div class="program-grid">
-               <!-- Phase 1: Dopamine Detox -->
-<div class="program-card" onclick="location.href='challenges/dopamine-detox.html'" style="cursor: pointer;">
-  <h3 class="phase-title">1. Dopamine Detox</h3>
-  <p class="phase-description">Complete 7 days of dopamine fasting to reset your brain's reward system.</p>
-  <div class="challenge-status">
-    <strong>Status:</strong> <span class="status-text">Not Started</span>
-  </div>
-  <button class="btn-start">View Challenge</button>
-</div>
+<div class="program-grid">
 
-<!-- Phase 2: Habit Stacking -->
-<div class="program-card" onclick="location.href='challenges/habit-stacking.html'" style="cursor: pointer;">
-  <h3 class="phase-title">2. Habit Stacking</h3>
-  <p class="phase-description">Build a morning routine by stacking positive habits on top of each other.</p>
-  <div class="challenge-status">
-    <strong>Status:</strong> <span class="status-text">Not Started</span>
+  <!-- Phase 1: Dopamine Detox -->
+  <div class="program-card" data-phase="0">
+    <h3 class="phase-title">1. Dopamine Detox</h3>
+    <p class="phase-description">Complete 7 days of dopamine fasting to reset your brain's reward system.</p>
+    <div class="challenge-status">
+      <strong>Status:</strong> <span class="status-text">Not Started</span>
+    </div>
+    <button class="btn-start">View Challenge</button>
   </div>
-  <button class="btn-start">View Challenge</button>
-</div>
 
-<!-- Phase 3: Trigger Awareness -->
-<div class="program-card" onclick="location.href='challenges/trigger-awareness.html'" style="cursor: pointer;">
-  <h3 class="phase-title">3. Trigger Awareness</h3>
-  <p class="phase-description">Identify emotional and environmental triggers that lead to urges.</p>
-  <div class="challenge-status">
-    <strong>Status:</strong> <span class="status-text">Not Started</span>
+  <!-- Phase 2: Habit Stacking -->
+  <div class="program-card" data-phase="1">
+    <h3 class="phase-title">2. Habit Stacking</h3>
+    <p class="phase-description">Build a morning routine by stacking positive habits on top of each other.</p>
+    <div class="challenge-status">
+      <strong>Status:</strong> <span class="status-text">Not Started</span>
+    </div>
+    <button class="btn-start">View Challenge</button>
   </div>
-  <button class="btn-start">View Challenge</button>
-</div>
 
-<!-- Phase 4: Squad Building -->
-<div class="program-card" onclick="location.href='challenges/squad-building.html'" style="cursor: pointer;">
-  <h3 class="phase-title">4. Squad Building</h3>
-  <p class="phase-description">Connect with accountability partners or a support group for motivation.</p>
-  <div class="challenge-status">
-    <strong>Status:</strong> <span class="status-text">Not Started</span>
+  <!-- Phase 3: Trigger Awareness -->
+  <div class="program-card" data-phase="2">
+    <h3 class="phase-title">3. Trigger Awareness</h3>
+    <p class="phase-description">Identify emotional and environmental triggers that lead to urges.</p>
+    <div class="challenge-status">
+      <strong>Status:</strong> <span class="status-text">Not Started</span>
+    </div>
+    <button class="btn-start">View Challenge</button>
   </div>
-  <button class="btn-start">View Challenge</button>
-</div>
 
-<!-- Phase 5: Mindful Living -->
-<div class="program-card" onclick="location.href='challenges/mindful-living.html'" style="cursor: pointer;">
-  <h3 class="phase-title">5. Mindful Living</h3>
-  <p class="phase-description">Practice meditation and mindfulness to regain control over urges.</p>
-  <div class="challenge-status">
-    <strong>Status:</strong> <span class="status-text">Not Started</span>
+  <!-- Phase 4: Squad Building -->
+  <div class="program-card" data-phase="3">
+    <h3 class="phase-title">4. Squad Building</h3>
+    <p class="phase-description">Connect with accountability partners or a support group for motivation.</p>
+    <div class="challenge-status">
+      <strong>Status:</strong> <span class="status-text">Not Started</span>
+    </div>
+    <button class="btn-start">View Challenge</button>
   </div>
-  <button class="btn-start">View Challenge</button>
-</div>
 
-<!-- Phase 6: Relapse Prevention -->
-<div class="program-card" onclick="location.href='challenges/relapse-prevention.html'" style="cursor: pointer;">
-  <h3 class="phase-title">6. Relapse Prevention</h3>
-  <p class="phase-description">Learn how to bounce back from relapses and stay on track with your recovery.</p>
-  <div class="challenge-status">
-    <strong>Status:</strong> <span class="status-text">Not Started</span>
+  <!-- Phase 5: Mindful Living -->
+  <div class="program-card" data-phase="4">
+    <h3 class="phase-title">5. Mindful Living</h3>
+    <p class="phase-description">Practice meditation and mindfulness to regain control over urges.</p>
+    <div class="challenge-status">
+      <strong>Status:</strong> <span class="status-text">Not Started</span>
+    </div>
+    <button class="btn-start">View Challenge</button>
   </div>
-  <button class="btn-start">View Challenge</button>
-</div>
 
-<!-- Phase 7: Low Up Phase -->
-<div class="program-card" onclick="location.href='challenges/low-up-phase.html'" style="cursor: pointer;">
-  <h3 class="phase-title">7. Low Up Phase</h3>
-  <p class="phase-description">Rebuild low-energy periods with goal setting, rest, and productive habits.</p>
-  <div class="challenge-status">
-    <strong>Status:</strong> <span class="status-text">Not Started</span>
+  <!-- Phase 6: Relapse Prevention -->
+  <div class="program-card" data-phase="5">
+    <h3 class="phase-title">6. Relapse Prevention</h3>
+    <p class="phase-description">Learn how to bounce back from relapses and stay on track with your recovery.</p>
+    <div class="challenge-status">
+      <strong>Status:</strong> <span class="status-text">Not Started</span>
+    </div>
+    <button class="btn-start">View Challenge</button>
   </div>
-  <button class="btn-start">View Challenge</button>
-</div>
 
-<!-- Phase 8: Boss Mode -->
-<div class="program-card" onclick="location.href='challenges/boss-mode.html'" style="cursor: pointer;">
-  <h3 class="phase-title">8. Boss Mode</h3>
-  <p class="phase-description">Level up your mental and physical discipline with advanced practices.</p>
-  <div class="challenge-status">
-    <strong>Status:</strong> <span class="status-text">Not Started</span>
+  <!-- Phase 7: Low Up Phase -->
+  <div class="program-card" data-phase="6">
+    <h3 class="phase-title">7. Low Up Phase</h3>
+    <p class="phase-description">Rebuild low-energy periods with goal setting, rest, and productive habits.</p>
+    <div class="challenge-status">
+      <strong>Status:</strong> <span class="status-text">Not Started</span>
+    </div>
+    <button class="btn-start">View Challenge</button>
   </div>
-  <button class="btn-start">View Challenge</button>
-</div>
 
-<!-- Phase 9: Final Boss -->
-<div class="program-card" onclick="location.href='challenges/final-boss.html'" style="cursor: pointer;">
-  <h3 class="phase-title">9. Final Boss</h3>
-  <p class="phase-description">Face your toughest inner battles and prove you're in full control.</p>
-  <div class="challenge-status">
-    <strong>Status:</strong> <span class="status-text">Not Started</span>
+  <!-- Phase 8: Boss Mode -->
+  <div class="program-card" data-phase="7">
+    <h3 class="phase-title">8. Boss Mode</h3>
+    <p class="phase-description">Level up your mental and physical discipline with advanced practices.</p>
+    <div class="challenge-status">
+      <strong>Status:</strong> <span class="status-text">Not Started</span>
+    </div>
+    <button class="btn-start">View Challenge</button>
   </div>
-  <button class="btn-start">View Challenge</button>
+
+  <!-- Phase 9: Final Boss -->
+  <div class="program-card" data-phase="8">
+    <h3 class="phase-title">9. Final Boss</h3>
+    <p class="phase-description">Face your toughest inner battles and prove you're in full control.</p>
+    <div class="challenge-status">
+      <strong>Status:</strong> <span class="status-text">Not Started</span>
+    </div>
+    <button class="btn-start">View Challenge</button>
+  </div>
+
 </div>
 
 
             </div>
         </div>
     </section>
-
-   <script src="script.js" defer></script>
-</body>
-
-</html>
+    <!-- Challenge Modal -->
+<div class="modal" id="challengeModal">
+  <div class="modal-content">
+    <span class="close-modal" id="closeChallenge">&times;</span>
+    <h2 id="challengePhaseTitle"></h2>
+    <div id="challengePhaseContent"></div>
+  </div>
+</div>
