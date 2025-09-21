@@ -53,6 +53,14 @@ app.get('/health', (req, res) => {
     res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
+// ADD THIS ENDPOINT - Secure Google config endpoint
+app.get('/api/config/google', (req, res) => {
+    res.json({
+        clientId: process.env.GOOGLE_CLIENT_ID,
+        redirectUri: process.env.GOOGLE_REDIRECT_URI
+    });
+});
+
 // Protected API routes
 app.get('/api/user/progress', (req, res) => {
     if (!req.session.user) {
@@ -71,3 +79,62 @@ app.get('/api/user/progress', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+
+const { OAuth2Client } = require('google-auth-library');
+const oAuth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+// Add this route to verify Google tokens
+app.post('/auth/google/verify', async (req, res) => {
+    try {
+        const { credential } = req.body;
+        
+        // Verify the Google token
+        const ticket = await oAuth2Client.verifyIdToken({
+            idToken: credential,
+            audience: process.env.GOOGLE_CLIENT_ID
+        });
+        
+        const payload = ticket.getPayload();
+        
+        // Create or update user session
+        req.session.user = {
+            id: payload.sub,
+            email: payload.email,
+            name: payload.name,
+            picture: payload.picture,
+            loggedInAt: new Date(),
+        };
+        
+        // Save session
+        req.session.save((err) => {
+            if (err) {
+                console.error('Session save error:', err);
+                return res.status(500).json({ error: 'Authentication failed' });
+            }
+            
+            res.json({
+                authenticated: true,
+                user: req.session.user
+            });
+        });
+        
+    } catch (error) {
+        console.error('Google token verification failed:', error);
+        res.status(401).json({ error: 'Authentication failed' });
+    }
+});
+
+// Add security headers
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "https://accounts.google.com"],
+            styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+            fontSrc: ["'self'", "https://fonts.gstatic.com"],
+            imgSrc: ["'self'", "data:", "https://lh3.googleusercontent.com"],
+            connectSrc: ["'self'", "https://accounts.google.com", "https://your-app.vercel.app"],
+        },
+    },
+    crossOriginEmbedderPolicy: false
+}));
