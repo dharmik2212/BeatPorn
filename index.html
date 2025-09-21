@@ -27,11 +27,10 @@
                 </nav>
                 <div class="auth-buttons">
                     <div id="g_id_onload"
-                         data-client_id="YOUR_GOOGLE_CLIENT_ID"
-                         data-context="signin"
-                         data-ux_mode="popup"
-                         data-login_uri="http://localhost:3000/auth/google/callback"
-                         data-auto_prompt="false">
+                        data-context="signin"
+                        data-ux_mode="popup"
+                        data-login_uri="https://beatporn.vercel.app/auth/callback"
+                        data-auto_prompt="false">
                     </div>
                     <div class="g_id_signin"
                          data-type="standard"
@@ -335,10 +334,19 @@
   </div>
 </div>
 
-  <script src="script.js" defer></script>
-<script src="auth.js" defer></script>
-
+ <script>
+      window.onGoogleLibraryLoad = () => {
+        console.log('Google library loaded');
+      };
+    </script>
+    <script 
+      src="https://accounts.google.com/gsi/client" 
+      async 
+      defer
+      onload="onGoogleLibraryLoad()">
+    </script>
+    
+    <script src="script.js" defer></script>
+    <script src="auth.js" defer></script>
   </body>
   </html>
-
-
