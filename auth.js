@@ -1,77 +1,236 @@
-const express = require('express');
-const { OAuth2Client } = require('google-auth-library');
-const router = express.Router();
+// API base URL - change this to your production domain
+const API_BASE_URL = 'https://beatporn.vercel.app'; // UPDATE WITH YOUR ACTUAL DOMAIN
 
-const oAuth2Client = new OAuth2Client(
-    process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET,
-    "http://localhost:3000/auth/google/callback"
-);
+// DOM Elements
+const logoutBtn = document.getElementById('logoutBtn');
+const userProfile = document.getElementById('userProfile');
+const userAvatar = document.getElementById('userAvatar');
+const userNameNav = document.getElementById('userNameNav');
 
-// Google authentication callback
-router.get('/google/callback', async (req, res) => {
+// Function to initialize Google Sign-In
+async function initializeGoogleSignIn() {
     try {
-        const { code } = req.query;
-
-        if (!code) {
-            return res.status(400).json({ error: 'Authorization code required' });
-        }
-
-        // Exchange code for tokens
-        const { tokens } = await oAuth2Client.getToken(code);
-        oAuth2Client.setCredentials(tokens);
-
-        // Verify ID token
-        const ticket = await oAuth2Client.verifyIdToken({
-            idToken: tokens.id_token,
-            audience: process.env.GOOGLE_CLIENT_ID
+        // Fetch Google config from server
+        const response = await fetch(`${API_BASE_URL}/api/config/google`);
+        const config = await response.json();
+        
+        // Initialize Google Sign-In with the server-provided config
+        window.google.accounts.id.initialize({
+            client_id: config.clientId,
+            callback: handleGoogleSignIn,
+            login_uri: config.redirectUri,
+            context: 'signin',
+            ux_mode: 'popup',
+            auto_prompt: false
         });
-
-        const payload = ticket.getPayload();
-
-        req.session.user = {
-            id: payload.sub,
-            email: payload.email,
-            name: payload.name,
-            picture: payload.picture,
-            loggedInAt: new Date()
-        };
-
-        // Redirect to dashboard (instead of just JSON)
-        res.redirect('/dashboard');  
+        
+        // Render the button
+        window.google.accounts.id.renderButton(
+            document.querySelector('.g_id_signin'),
+            {
+                type: 'standard',
+                shape: 'pill',
+                theme: 'filled_blue',
+                text: 'signin_with',
+                size: 'medium',
+                logo_alignment: 'left'
+            }
+        );
+        
     } catch (error) {
-        console.error('Google authentication error:', error);
-        res.status(401).json({ error: 'Authentication failed' });
+        console.error('Failed to initialize Google Sign-In:', error);
     }
-});
+}
 
-// Check authentication status
-router.get('/status', (req, res) => {
-    if (req.session.user) {
-        res.json({ 
-            authenticated: true, 
-            user: req.session.user 
+// Handle Google Sign-In response
+function handleGoogleSignIn(response) {
+    // Send the credential to your server for verification
+    verifyGoogleToken(response.credential);
+}
+
+// Verify the Google token on your server
+async function verifyGoogleToken(credential) {
+    try {
+        const verifyResponse = await fetch(`${API_BASE_URL}/auth/google/verify`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ credential }),
+            credentials: 'include'
         });
+        
+        if (verifyResponse.ok) {
+            const userData = await verifyResponse.json();
+            updateUIForAuthenticatedUser(userData);
+        } else {
+            console.error('Google token verification failed');
+        }
+    } catch (error) {
+        console.error('Token verification error:', error);
+    }
+}
+
+// Check authentication status on page load
+async function checkAuthStatus() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/auth/status`, {
+            credentials: 'include'
+        });
+        
+        if (response.ok) {
+            const userData = await response.json();
+            updateUIForAuthenticatedUser(userData);
+        } else {
+            updateUIForUnauthenticatedUser();
+        }
+    } catch (error) {
+        console.error('Auth status check failed:', error);
+        updateUIForUnauthenticatedUser();
+    }
+}
+
+// Update UI for authenticated user
+function updateUIForAuthenticatedUser(userData) {
+    userProfile.style.display = 'flex';
+    logoutBtn.style.display = 'block';
+    
+    // Hide Google sign-in button
+    const googleSignInButton = document.querySelector('.g_id_signin');
+    if (googleSignInButton) {
+        googleSignInButton.style.display = 'none';
+    }
+    
+    // Update user info
+    if (userData.picture) {
+        userAvatar.src = userData.picture;
+        userAvatar.alt = userData.name;
+    }
+    userNameNav.textContent = userData.name;
+    
+    // Enable protected features
+    enableProtectedFeatures();
+}
+
+// Update UI for unauthenticated user
+function updateUIForUnauthenticatedUser() {
+    userProfile.style.display = 'none';
+    logoutBtn.style.display = 'none';
+    
+    // Show Google sign-in button
+    const googleSignInButton = document.querySelector('.g_id_signin');
+    if (googleSignInButton) {
+        googleSignInButton.style.display = 'block';
+    }
+    
+    // Disable protected features
+    disableProtectedFeatures();
+}
+
+// Handle logout
+async function handleLogout() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/auth/logout`, {
+            method: 'POST',
+            credentials: 'include'
+        });
+        
+        if (response.ok) {
+            updateUIForUnauthenticatedUser();
+            
+            // Reload the page to reset state
+            window.location.reload();
+        }
+    } catch (error) {
+        console.error('Logout failed:', error);
+    }
+}
+
+// Enable features that require authentication
+function enableProtectedFeatures() {
+    const startAssessmentBtn = document.getElementById('startAssessment');
+    if (startAssessmentBtn) {
+        startAssessmentBtn.disabled = false;
+        startAssessmentBtn.style.opacity = '1';
+    }
+    
+    // Enable program cards
+    const programCards = document.querySelectorAll('.program-card');
+    programCards.forEach(card => {
+        card.style.opacity = '1';
+        card.style.pointerEvents = 'auto';
+    });
+}
+
+// Disable features that require authentication
+function disableProtectedFeatures() {
+    const startAssessmentBtn = document.getElementById('startAssessment');
+    if (startAssessmentBtn) {
+        startAssessmentBtn.disabled = true;
+        startAssessmentBtn.style.opacity = '0.5';
+    }
+    
+    // Disable program cards
+    const programCards = document.querySelectorAll('.program-card');
+    programCards.forEach(card => {
+        card.style.opacity = '0.5';
+        card.style.pointerEvents = 'none';
+    });
+}
+
+// Update your DOMContentLoaded event listener
+document.addEventListener('DOMContentLoaded', async () => {
+    await checkAuthStatus();
+    
+    // Initialize Google Sign-In when the library is loaded
+    if (typeof window.google !== 'undefined') {
+        initializeGoogleSignIn();
     } else {
-        res.status(401).json({ 
-            authenticated: false 
-        });
+        // Wait for the Google library to load
+        window.onGoogleLibraryLoad = initializeGoogleSignIn;
+    }
+    
+    // Set up logout button
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', handleLogout);
     }
 });
 
-// Logout
-router.post('/logout', (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-            console.error('Logout error:', err);
-            return res.status(500).json({ error: 'Logout failed' });
+// Function to make authenticated API calls
+async function makeAuthenticatedRequest(url, options = {}) {
+    const defaultOptions = {
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    };
+    
+    const mergedOptions = { ...defaultOptions, ...options };
+    
+    try {
+        const response = await fetch(url, mergedOptions);
+        
+        if (response.status === 401) {
+            // Unauthorized - redirect to login
+            updateUIForUnauthenticatedUser();
+            throw new Error('Authentication required');
         }
         
-        res.clearCookie('connect.sid');
-        res.json({ success: true });
-    });
-});
+        return response;
+    } catch (error) {
+        console.error('API request failed:', error);
+        throw error;
+    }
+}
 
-module.exports = router;
-
-
+// Example of using the authenticated request function
+async function getUserProgress() {
+    try {
+        const response = await makeAuthenticatedRequest(`${API_BASE_URL}/api/user/progress`);
+        if (response.ok) {
+            return await response.json();
+        }
+    } catch (error) {
+        console.error('Failed to fetch user progress:', error);
+    }
+}
